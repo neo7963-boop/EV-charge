@@ -3,178 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EV Charge Timer Pro</title>
+    <title>EV Timer Pro (BG Fix)</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f0f4f8; margin: 0; padding: 20px; color: #1a202c; }
-        .container { max-width: 450px; margin: auto; }
-        
-        /* Main Card */
-        .card { background: white; padding: 30px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; margin-bottom: 25px; }
-        h1 { color: #2d3748; margin-bottom: 10px; font-size: 1.8rem; letter-spacing: -0.5px; }
-        p { color: #718096; margin-bottom: 25px; }
-
-        /* Timer Inputs */
-        .input-group { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 25px; }
-        .input-box { display: flex; flex-direction: column; align-items: center; }
-        .input-box label { font-size: 0.75rem; font-weight: bold; color: #a0aec0; text-transform: uppercase; margin-bottom: 8px; }
-        input { width: 80px; padding: 15px; font-size: 1.5rem; border-radius: 15px; border: 2px solid #edf2f7; background: #f8fafc; text-align: center; outline: none; transition: border-color 0.2s; }
-        input:focus { border-color: #48bb78; }
-
-        /* Buttons */
-        button { width: 100%; padding: 18px; font-size: 1.1rem; font-weight: 700; cursor: pointer; border: none; border-radius: 16px; transition: all 0.2s; }
-        .start-btn { background-color: #48bb78; color: white; box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3); }
-        .start-btn:active { transform: scale(0.98); }
-        .stop-btn { background-color: #f56565; color: white; box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3); }
-
-        #status { margin-top: 25px; font-size: 2rem; font-weight: 800; color: #2d3748; font-variant-numeric: tabular-nums; }
-
-        /* History Section */
-        .history-card { background: white; padding: 20px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 5px; }
-        .history-header h3 { margin: 0; font-size: 1.1rem; color: #4a5568; }
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; font-size: 0.75rem; color: #a0aec0; text-transform: uppercase; padding: 10px; border-bottom: 1px solid #edf2f7; }
-        td { padding: 12px 10px; font-size: 0.9rem; border-bottom: 1px solid #f7fafc; color: #4a5568; }
-        .clear-btn { background: none; color: #a0aec0; width: auto; font-size: 0.75rem; font-weight: normal; padding: 0; text-decoration: underline; margin: 0; }
-        .badge { background: #ebfbee; color: #2f855a; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: #f0f4f8; padding: 20px; color: #1a202c; text-align: center; }
+        .card { background: white; padding: 30px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); max-width: 400px; margin: auto; }
+        .input-group { display: flex; justify-content: center; gap: 15px; margin: 20px 0; }
+        input { width: 80px; padding: 15px; font-size: 1.5rem; border-radius: 12px; border: 2px solid #edf2f7; text-align: center; }
+        button { width: 100%; padding: 18px; font-size: 1.1rem; font-weight: 700; border-radius: 16px; border: none; cursor: pointer; }
+        .start-btn { background: #48bb78; color: white; }
+        .stop-btn { background: #f56565; color: white; }
+        #status { margin-top: 25px; font-size: 2.2rem; font-weight: 800; font-family: monospace; }
+        .hint { font-size: 0.8rem; color: #a0aec0; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="card">
-        <h1>⚡ EV Charger</h1>
-        <p>Set duration to start charging</p>
-        
-        <div class="input-group">
-            <div class="input-box">
-                <label>Hours</label>
-                <input type="number" id="hours" value="0" min="0" placeholder="0">
-            </div>
-            <div style="font-weight: bold; margin-top: 25px; font-size: 1.5rem; color: #cbd5e0;">:</div>
-            <div class="input-box">
-                <label>Minutes</label>
-                <input type="number" id="minutes" value="30" min="0" max="59" placeholder="30">
-            </div>
-        </div>
-
-        <button id="actionBtn" class="start-btn" onclick="toggleTimer()">Start Charging</button>
-        <div id="status">Ready</div>
+<div class="card">
+    <h1>⚡ EV Timer</h1>
+    <div class="input-group">
+        <input type="number" id="hours" value="0" placeholder="H">
+        <input type="number" id="minutes" value="30" placeholder="M">
     </div>
-
-    <div class="history-card">
-        <div class="history-header">
-            <h3>Charging Logs</h3>
-            <button class="clear-btn" onclick="clearHistory()">Clear All</button>
-        </div>
-        <table id="historyTable">
-            <thead>
-                <tr>
-                    <th>Date & Time</th>
-                    <th>Duration</th>
-                </tr>
-            </thead>
-            <tbody id="historyBody"></tbody>
-        </table>
-    </div>
+    <button id="actionBtn" class="start-btn" onclick="toggleTimer()">Start Charging</button>
+    <div id="status">00:00:00</div>
+    <p class="hint">Timer works even if you lock your screen.</p>
 </div>
 
-<audio id="alarmSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+<audio id="alarmSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" loop></audio>
 
 <script>
-    let timer;
-    let isRunning = false;
-    let startTime;
-
-    window.onload = displayHistory;
+    let timerInterval;
+    let targetTime; // The exact timestamp when charging should finish
 
     function toggleTimer() {
         const btn = document.getElementById('actionBtn');
-        const status = document.getElementById('status');
-        const hInput = document.getElementById('hours');
-        const mInput = document.getElementById('minutes');
-        const alarm = document.getElementById('alarmSound');
+        const h = parseInt(document.getElementById('hours').value) || 0;
+        const m = parseInt(document.getElementById('minutes').value) || 0;
+        
+        if (btn.innerText === "Start Charging") {
+            const totalMs = ((h * 3600) + (m * 60)) * 1000;
+            if (totalMs <= 0) return;
 
-        if (!isRunning) {
-            let h = parseInt(hInput.value) || 0;
-            let m = parseInt(mInput.value) || 0;
-            let totalSeconds = (h * 3600) + (m * 60);
-
-            if (totalSeconds <= 0) {
-                alert("Please enter a valid duration.");
-                return;
-            }
-
-            startTime = new Date().toLocaleString('en-GB', { hour12: true });
-            isRunning = true;
-            btn.innerText = "Stop Timer";
-            btn.className = "stop-btn";
+            // FIX: Set a fixed end time in the future
+            targetTime = Date.now() + totalMs;
+            localStorage.setItem('ev_target_time', targetTime);
             
-            timer = setInterval(() => {
-                totalSeconds--;
-                
-                let displayH = Math.floor(totalSeconds / 3600);
-                let displayM = Math.floor((totalSeconds % 3600) / 60);
-                let displayS = totalSeconds % 60;
-
-                // Format numbers to always show two digits for MM:SS
-                let hStr = displayH > 0 ? displayH + "h " : "";
-                let mStr = displayM.toString().padStart(2, '0') + "m ";
-                let sStr = displayS.toString().padStart(2, '0') + "s";
-                
-                status.innerText = `${hStr}${mStr}${sStr}`;
-
-                if (totalSeconds <= 0) {
-                    clearInterval(timer);
-                    status.innerText = "🔋 Finished!";
-                    alarm.play();
-                    saveRecord(startTime, `${h}h ${m}m`, true);
-                    alert("Charging Complete!");
-                    resetUI();
-                }
-            }, 1000);
+            startLogic();
         } else {
-            if(confirm("Stop timer and record session?")) {
-                clearInterval(timer);
-                saveRecord(startTime, "Manual Stop", false);
-                resetUI();
-            }
+            stopLogic();
         }
     }
 
-    function resetUI() {
-        isRunning = false;
+    function startLogic() {
+        const btn = document.getElementById('actionBtn');
+        btn.innerText = "Stop / Reset";
+        btn.className = "stop-btn";
+        
+        // Update display every second
+        timerInterval = setInterval(updateDisplay, 1000);
+        updateDisplay(); 
+    }
+
+    function updateDisplay() {
+        const now = Date.now();
+        const savedTarget = localStorage.getItem('ev_target_time');
+        if (!savedTarget) return;
+
+        const diff = savedTarget - now;
+
+        if (diff <= 0) {
+            document.getElementById('status').innerText = "00:00:00";
+            document.getElementById('status').style.color = "#f56565";
+            document.getElementById('alarmSound').play();
+            clearInterval(timerInterval);
+            return;
+        }
+
+        const h = Math.floor(diff / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+
+        document.getElementById('status').innerText = 
+            `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    }
+
+    function stopLogic() {
+        clearInterval(timerInterval);
+        localStorage.removeItem('ev_target_time');
         document.getElementById('actionBtn').innerText = "Start Charging";
         document.getElementById('actionBtn').className = "start-btn";
-        document.getElementById('status').innerText = "Ready";
+        document.getElementById('status').innerText = "00:00:00";
+        document.getElementById('status').style.color = "#1a202c";
+        document.getElementById('alarmSound').pause();
+        document.getElementById('alarmSound').currentTime = 0;
     }
 
-    function saveRecord(time, duration, completed) {
-        let history = JSON.parse(localStorage.getItem('ev_history') || '[]');
-        let label = completed ? `<span class="badge">${duration}</span>` : `<span style="color:#e53e3e">${duration}</span>`;
-        history.unshift({ time, label });
-        localStorage.setItem('ev_history', JSON.stringify(history));
-        displayHistory();
-    }
-
-    function displayHistory() {
-        const historyBody = document.getElementById('historyBody');
-        let history = JSON.parse(localStorage.getItem('ev_history') || '[]');
-        historyBody.innerHTML = history.map(item => `
-            <tr>
-                <td>${item.time}</td>
-                <td>${item.label}</td>
-            </tr>
-        `).join('');
-    }
-
-    function clearHistory() {
-        if(confirm("Are you sure you want to delete all logs?")) {
-            localStorage.removeItem('ev_history');
-            displayHistory();
+    // Auto-resume if the user comes back to the app
+    window.onload = () => {
+        if (localStorage.getItem('ev_target_time')) {
+            startLogic();
         }
-    }
+    };
 </script>
-
 </body>
 </html>
